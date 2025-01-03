@@ -1,10 +1,30 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { UtilsModule } from './utils/utils.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }), // Load environment variables globally
+
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule], // Import ConfigModule
+      inject: [ConfigService], // Inject ConfigService
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        url: configService.get<string>('DATABASE_URL'), // Use connection string if available
+        ssl: { rejectUnauthorized: false }, // For Neon
+        autoLoadEntities: true,
+        synchronize: true, // Disable in production
+        logging: ['error', 'warn', 'query'], // Enable logs for debugging
+      }),
+
+    }),
+    UsersModule,
+    AuthModule,
+    UtilsModule,
+  ],
 })
-export class AppModule {}
+export class AppModule { }
