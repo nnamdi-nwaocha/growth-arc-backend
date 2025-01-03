@@ -7,7 +7,7 @@ export class MailService {
     private resend: Resend;
 
     constructor(private configService: ConfigService) {
-        const apiKey = this.configService.get<string>('RESEND_API_KEY');
+        const apiKey = this.configService.getOrThrow<string>('RESEND_API_KEY');
         this.resend = new Resend(apiKey);
     }
 
