@@ -12,7 +12,8 @@ export class MailService {
     }
 
     async sendConfirmationEmail(email: string, token: string) {
-        const url = `http://localhost:3000/login?token=${token}`; // Replace with your frontend URL
+        const frontendUrl = this.configService.getOrThrow<string>('FRONTEND_URL');
+        const url = `${frontendUrl}/login?token=${token}`; // Replace with your frontend URL
         try {
             const response = await this.resend.emails.send({
                 from: 'Growth Arc <no-reply@ideate.cc>',
