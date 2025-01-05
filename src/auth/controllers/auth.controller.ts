@@ -42,6 +42,7 @@ export class AuthController {
     @Post('login')
     @UseGuards(LocalAuthGuard)
     async login(
+        @Body() body: LoginDto,
         @CurrentUser() user: User,
         @Res({ passthrough: true }) response: Response,
     ) {
