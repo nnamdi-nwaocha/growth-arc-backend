@@ -12,8 +12,12 @@ export class UsersService {
 
     // Create a new user
     async create(userData: Partial<User>): Promise<User> {
-        const user = this.usersRepository.create(userData);
-        return this.usersRepository.save(user);
+        try {
+            const user = this.usersRepository.create(userData);
+            return this.usersRepository.save(user);
+        } catch (error) {
+            throw new Error('Error creating user');
+        }
     }
 
     // Find a user by email
@@ -27,21 +31,35 @@ export class UsersService {
 
     // Find a user by ID
     async findById(id: string): Promise<User | undefined> {
-        const user = this.usersRepository.findOne({ where: { user_id: id } });
-        if (!user) throw new NotFoundException('User not found');
-        return user;
+        try {
+            const user = this.usersRepository.findOne({ where: { user_id: id } });
+            if (!user) throw new NotFoundException('User not found');
+            return user;
+        } catch (error) {
+            throw new NotFoundException('User not found');
+        }
     }
 
     // Update user data (e.g., refresh token)
-    async updateUser(id: string, updateData: Partial<User>): Promise<void> {
-        await this.usersRepository.update(id, updateData);
+    async updateUser(id: string, updateData: Partial<User>): Promise<User> {
+        try {
+            const user = await this.findById(id);
+            const updatedUser = await Object.assign(user, updateData);
+            return await this.usersRepository.save(updatedUser);
+        } catch (error) {
+            throw new Error('Error updating user');
+        }
     }
 
     async updateProfilePicture(userId: string, profileUrl: string): Promise<User> {
-        const user = await this.usersRepository.findOne({ where: { user_id: userId } });
-        if (!user) throw new NotFoundException('User not found');
-        user.profile_picture_url = profileUrl;
-        return this.usersRepository.save(user);
+        try {
+            const user = await this.findById(userId)
+            user.profile_picture_url = profileUrl;
+            return this.usersRepository.save(user);
+        } catch (error) {
+            throw new Error('Error updating profile picture');
+
+        }
     }
 
 }

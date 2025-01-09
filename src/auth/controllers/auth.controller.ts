@@ -46,7 +46,7 @@ export class AuthController {
         @CurrentUser() user: User,
         @Res({ passthrough: true }) response: Response,
     ) {
-        if (!user.isEmailConfirmed) {
+        if (!user.is_email_confirmed) {
             throw new UnauthorizedException('Please confirm your email address');
         }
         await this.authService.login(user, response);

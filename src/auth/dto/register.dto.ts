@@ -17,8 +17,8 @@ export class RegisterDto {
     @IsString()
     lastname: string;
 
-    @IsNotEmpty()
-    @IsString()
-    @MaxLength(160)
-    bio: string;
+    // @IsNotEmpty()
+    // @IsString()
+    // @MaxLength(160)
+    // bio: string;
 }

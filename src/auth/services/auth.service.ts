@@ -93,7 +93,6 @@ export class AuthService {
             password: hashedPassword,
             firstname: registerDto.firstname,
             lastname: registerDto.lastname,
-            bio: registerDto.bio,
         });
 
         const confirmationToken = this.jwtService.sign({ email: user.email }, { secret: this.configService.get<string>('JWT_CONFIRMATION_TOKEN_SECRET'), expiresIn: '1d' });
@@ -110,7 +109,7 @@ export class AuthService {
                 throw new UnauthorizedException('Invalid token');
             }
 
-            await this.usersService.updateUser(user.user_id, { isEmailConfirmed: true });
+            await this.usersService.updateUser(user.user_id, { is_email_confirmed: true });
         } catch (error) {
             throw new UnauthorizedException('Invalid confirmation token');
         }

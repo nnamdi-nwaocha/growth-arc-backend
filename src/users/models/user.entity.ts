@@ -18,13 +18,16 @@ export class User {
     lastname: string;
 
     @Column({ default: false })
-    isEmailConfirmed: boolean;
-
-    @Column({ nullable: true })
-    bio: string;
+    is_email_confirmed: boolean;
 
     @Column({ nullable: true })
     refresh_token: string;
+
+    @Column({ default: false })
+    is_teacher: boolean;
+
+    @Column({ nullable: true })
+    teacher_bio?: string;
 
     @Column({ nullable: true })
     profile_picture_url?: string;
